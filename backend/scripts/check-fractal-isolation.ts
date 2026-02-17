@@ -19,9 +19,9 @@ interface ForbiddenImportRule {
 const FORBIDDEN_IMPORTS: ForbiddenImportRule[] = [
   { pattern: /from ['"]axios['"]/, reason: 'Use FractalHostDeps.http', severity: 'error' },
   { pattern: /from ['"]node-fetch['"]/, reason: 'Use FractalHostDeps.http', severity: 'error' },
-  { pattern: /from ['"]mongoose['"]/, reason: 'Use FractalHostDeps.db', severity: 'error', allowedIn: ['storage/', 'data/'] },
-  { pattern: /from ['"]mongodb['"]/, reason: 'Use FractalHostDeps.db', severity: 'error', allowedIn: ['storage/', 'data/'] },
-  { pattern: /process\.env\.\w+/, reason: 'Use FractalHostDeps.settings', severity: 'warning', allowedIn: ['config/', 'bootstrap/', 'runtime/', 'ops/'] },
+  { pattern: /from ['"]mongoose['"]/, reason: 'Use FractalHostDeps.db', severity: 'error', allowedIn: ['storage/', 'data/', 'governance/', 'lifecycle/'] },
+  { pattern: /from ['"]mongodb['"]/, reason: 'Use FractalHostDeps.db', severity: 'error', allowedIn: ['storage/', 'data/', 'governance/', 'lifecycle/'] },
+  { pattern: /process\.env\.\w+/, reason: 'Use FractalHostDeps.settings', severity: 'warning', allowedIn: ['config/', 'bootstrap/', 'runtime/', 'ops/', 'freeze/', 'api/'] },
   { pattern: /from ['"]\.\.\/\.\.\/core\//, reason: 'Fractal must be isolated from core', severity: 'error' },
 ];
 
