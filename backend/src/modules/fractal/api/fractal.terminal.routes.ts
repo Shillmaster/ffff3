@@ -249,13 +249,28 @@ async function computeHorizonSignal(candles: any[], horizon: HorizonKey) {
   }
 }
 
-function computeConsensusIndex(matrix: TerminalPayload['horizonMatrix']): number {
+function computeSimpleConsensusIndex(matrix: TerminalPayload['horizonMatrix']): number {
   const directions = matrix.map(h => h.direction);
   const bullCount = directions.filter(d => d === 'BULL').length;
   const bearCount = directions.filter(d => d === 'BEAR').length;
   const total = directions.length;
   const maxAgree = Math.max(bullCount, bearCount);
   return total > 0 ? maxAgree / total : 0;
+}
+
+/**
+ * BLOCK 59.2 — P1.1: Build full consensus from horizonMatrix
+ */
+function buildConsensusFromMatrix(matrix: TerminalPayload['horizonMatrix']): ConsensusResult {
+  const signals: HorizonSignalInput[] = matrix.map(h => ({
+    horizon: h.horizon,
+    direction: h.direction === 'BULL' ? 'BUY' : h.direction === 'BEAR' ? 'SELL' : 'HOLD',
+    confidence: h.confidence,
+    blockers: h.blockers,
+    reliability: h.reliability,
+  }));
+  
+  return computeFullConsensus(signals);
 }
 
 // ═══════════════════════════════════════════════════════════════
