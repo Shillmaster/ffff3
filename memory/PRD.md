@@ -133,6 +133,12 @@ Created institutional docs:
 - [x] Regime endpoint (GET /api/fractal/v2.1/regime)
 - [x] Global Bias calculation (long-horizon dominance)
 
+### ✅ PHASE 2 P0.1-P0.4 — Multi-Layer Regime System (COMPLETED 2026-02-17)
+- [x] P0.1: Terminal Aggregator endpoint (one request → entire terminal)
+- [x] P0.2: HorizonSelector + HorizonMatrix components
+- [x] P0.3: GlobalStructureBar component
+- [x] P0.4: useFractalTerminal hook
+
 ### ✅ BLOCK E — Telegram Admin Alerts + Cron Hardening (COMPLETED 2026-02-17)
 - [x] TelegramHardenedService (rate limit, retry, deduplication)
 - [x] CronHardeningService (lock, idempotency, timeout protection)
