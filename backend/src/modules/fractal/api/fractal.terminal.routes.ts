@@ -125,6 +125,26 @@ interface TerminalPayload {
         contribution: number;
       }>;
     };
+    // BLOCK 59.2 — P1.2: Conflict Policy
+    conflict: {
+      level: 'NONE' | 'MINOR' | 'MODERATE' | 'MAJOR' | 'SEVERE';
+      mode: 'TREND_FOLLOW' | 'COUNTER_TREND' | 'WAIT';
+      sizingPenalty: number;
+      sizingMultiplier: number;
+      structureVsTiming: {
+        aligned: boolean;
+        structureDir: 'BUY' | 'SELL' | 'HOLD';
+        timingDir: 'BUY' | 'SELL' | 'HOLD';
+        divergenceScore: number;
+      };
+      tiers: {
+        structure: { dir: 'BUY' | 'SELL' | 'HOLD'; strength: number };
+        tactical: { dir: 'BUY' | 'SELL' | 'HOLD'; strength: number };
+        timing: { dir: 'BUY' | 'SELL' | 'HOLD'; strength: number };
+      };
+      explain: string[];
+      recommendation: string;
+    };
   };
 }
 
