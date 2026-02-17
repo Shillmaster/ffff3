@@ -131,7 +131,8 @@ class BlockEAPITester:
             "Telegram Test Hardened",
             "POST",
             "/api/fractal/v2.1/admin/telegram/test-hardened",
-            200
+            200,
+            data={}  # Empty object instead of None
         )
         
         if success:
