@@ -2539,8 +2539,8 @@ class FractalAPITester:
 
 def main():
     """Main test execution"""
-    print("🔧 Fractal Backend Testing Suite - Fractal V2.1 Institutional Multi-Horizon")
-    print(f"Testing backend at: https://btc-model-research.preview.emergentagent.com")
+    print("🔧 Fractal Backend Testing Suite - PHASE 2 P0.1-P0.4: Terminal Aggregator System")
+    print(f"Testing backend at: https://fractal-modules.preview.emergentagent.com")
     print(f"Test started at: {datetime.now().isoformat()}")
     print()
     
@@ -2551,12 +2551,12 @@ def main():
     tester = FractalAPITester()
     results = tester.run_all_tests()
     
-    # Return appropriate exit code
-    if results["institutional_success"] >= 80:
-        print("🎉 Fractal V2.1 Institutional testing completed successfully!")
+    # Return appropriate exit code based on PHASE 2 success
+    if results["phase2_success"] >= 80:
+        print("🎉 PHASE 2 P0.1-P0.4 Terminal Aggregator testing completed successfully!")
         return 0
     else:
-        print("💥 Fractal V2.1 Institutional testing found critical issues!")
+        print("💥 PHASE 2 P0.1-P0.4 Terminal Aggregator testing found critical issues!")
         return 1
 
 if __name__ == "__main__":
