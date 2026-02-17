@@ -112,4 +112,32 @@ export class CanonicalStore {
       quality: (c as any).quality?.qualityScore ?? 1.0
     }));
   }
+
+  /**
+   * Get last N candles in engine format (for BLOCK 58/59)
+   */
+  async getCandles(opts: {
+    symbol: string;
+    limit?: number;
+  }): Promise<Array<{ ts: Date; open: number; high: number; low: number; close: number; volume: number }>> {
+    const symbol = opts.symbol.replace('USD', '');
+    const candles = await CanonicalOhlcvModel.find({
+      'meta.symbol': symbol,
+      'meta.timeframe': '1d'
+    })
+      .sort({ ts: -1 })
+      .limit(opts.limit || 1200)
+      .lean();
+
+    return candles
+      .reverse()
+      .map(c => ({
+        ts: c.ts,
+        open: c.ohlcv.o,
+        high: c.ohlcv.h,
+        low: c.ohlcv.l,
+        close: c.ohlcv.c,
+        volume: c.ohlcv.v
+      }));
+  }
 }
