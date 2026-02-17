@@ -1,0 +1,83 @@
+{
+  "total_tests": 4,
+  "passed_tests": 4,
+  "success_rate": 100.0,
+  "results": [
+    {
+      "test": "Health endpoint",
+      "success": true,
+      "timestamp": "2026-02-17T15:55:38.252769",
+      "details": {
+        "status_code": 200,
+        "response": {
+          "ok": true,
+          "mode": "FRACTAL_ONLY",
+          "timestamp": "2026-02-17T15:55:38.214Z"
+        }
+      }
+    },
+    {
+      "test": "Fractal health endpoint",
+      "success": true,
+      "timestamp": "2026-02-17T15:55:38.494793",
+      "details": {
+        "status_code": 200,
+        "response": {
+          "ok": true,
+          "enabled": true,
+          "bootstrapDone": true,
+          "bootstrapFileExists": true,
+          "bootstrapFilePath": "/app/backend/data/fractal/bootstrap/BTCUSD_daily.csv",
+          "legacyFileExists": true,
+          "lastCanonicalTs": "2026-02-15T00:00:00.000Z",
+          "candleCount": 5692,
+          "gaps": 0,
+          "dataIntegrity": "OK",
+          "lagDays": 1,
+          "sources": {
+            "primary": "kraken_csv",
+            "fallback": [
+              "coinbase"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "test": "Fractal signal endpoint",
+      "success": true,
+      "timestamp": "2026-02-17T15:55:38.702300",
+      "details": {
+        "status_code": 200,
+        "has_signals": true,
+        "has_assembled": true,
+        "response_keys": [
+          "meta",
+          "signalsByHorizon",
+          "assembled",
+          "risk",
+          "reliability",
+          "explain"
+        ]
+      }
+    },
+    {
+      "test": "Shadow divergence endpoint",
+      "success": true,
+      "timestamp": "2026-02-17T15:55:38.888922",
+      "details": {
+        "status_code": 200,
+        "response_keys": [
+          "meta",
+          "summary",
+          "equity",
+          "calibration",
+          "divergenceLedger",
+          "recommendation"
+        ],
+        "has_meta": true,
+        "has_recommendation": true
+      }
+    }
+  ]
+}
