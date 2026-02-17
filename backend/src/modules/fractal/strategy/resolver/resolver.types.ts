@@ -7,7 +7,7 @@
  * - Final (combined decision with size multiplier)
  */
 
-import type { HorizonKey } from '../config/horizon.config.js';
+import type { HorizonKey } from '../../config/horizon.config.js';
 
 // ═══════════════════════════════════════════════════════════════
 // ENUMS
