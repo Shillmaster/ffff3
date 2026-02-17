@@ -115,11 +115,12 @@ Created institutional docs:
 
 ## Next Blocks
 
-### BLOCK B — Module Isolation Audit
-- [ ] HostDeps interface
-- [ ] Forbidden imports guard
-- [ ] Fail containment
-- [ ] Isolation tests
+### ✅ BLOCK B — Module Isolation Audit (COMPLETED 2026-02-17)
+- [x] FractalHostDeps interface (`/isolation/fractal.host.deps.ts`)
+- [x] Forbidden imports registry (`/isolation/forbidden.imports.ts`)
+- [x] Fail containment wrapper (`/isolation/fail.containment.ts`)
+- [x] Linting script (`scripts/check-fractal-isolation.ts`)
+- [x] Isolation tests (15 tests PASSED)
 
 ### BLOCK C — MetaBrain Integration Contract
 - [ ] FractalAdapter
