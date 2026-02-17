@@ -122,10 +122,16 @@ Created institutional docs:
 - [x] Linting script (`scripts/check-fractal-isolation.ts`)
 - [x] Isolation tests (15 tests PASSED)
 
-### BLOCK C — MetaBrain Integration Contract
-- [ ] FractalAdapter
-- [ ] Fallback logic
-- [ ] Integration tests
+### ✅ BLOCK 58 — Hierarchical Resolver (COMPLETED 2026-02-17)
+- [x] HierarchicalResolverService (Bias + Timing + Final)
+- [x] Horizon config (7d/14d/30d/90d/180d/365d)
+- [x] Multi-signal endpoint (GET /api/fractal/v2.1/multi-signal)
+- [x] 11 vitest tests PASSED
+
+### ✅ BLOCK 59 — Extended Horizons (COMPLETED 2026-02-17)
+- [x] 90d/180d/365d horizon support
+- [x] Regime endpoint (GET /api/fractal/v2.1/regime)
+- [x] Global Bias calculation (long-horizon dominance)
 
 ### ✅ BLOCK E — Telegram Admin Alerts + Cron Hardening (COMPLETED 2026-02-17)
 - [x] TelegramHardenedService (rate limit, retry, deduplication)
