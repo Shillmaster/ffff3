@@ -221,9 +221,9 @@ class BlockEAPITester:
 
     def test_daily_job_hardened_with_auth(self) -> bool:
         """Test POST /api/fractal/v2.1/admin/jobs/daily-run-hardened with auth"""
-        # Use the FRACTAL_CRON_SECRET from .env
+        # Use the FRACTAL_CRON_SECRET from .env with Bearer token
         headers = {
-            'X-Cron-Secret': 'fractal_production_cron_secret_2024'
+            'Authorization': 'Bearer fractal_production_cron_secret_2024'
         }
         
         success, response = self.run_test(
