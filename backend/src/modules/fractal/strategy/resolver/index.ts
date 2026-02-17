@@ -1,6 +1,7 @@
 /**
- * BLOCK 58/59 — Resolver Module Index
+ * BLOCK 58/59/59.2 — Resolver Module Index
  */
 
 export * from './resolver.types.js';
 export * from './resolver.hierarchical.service.js';
+export * from './consensus.index.js';
