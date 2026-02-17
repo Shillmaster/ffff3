@@ -18,7 +18,7 @@ import {
   BIAS_WEIGHTS,
   TIMING_WEIGHTS,
   type HorizonKey,
-} from '../config/horizon.config.js';
+} from '../../config/horizon.config.js';
 
 import type {
   BiasResolved,
