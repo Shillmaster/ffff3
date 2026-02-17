@@ -173,6 +173,7 @@ export async function registerFractalModule(fastify: FastifyInstance, deps?: Par
   console.log('[Fractal] BLOCK 58: Hierarchical Resolver (Bias + Timing + Final) registered');
   console.log('[Fractal] BLOCK 59: Extended Horizons (90d/180d/365d) registered');
   console.log('[Fractal] BLOCK 59.1: Global Regime Panel registered');
+  console.log('[Fractal] PHASE 2 P0.1: Terminal Aggregator registered');
   console.log('[Fractal] FREEZE: Contract v2.1.0 frozen, guards active');
   console.log('[Fractal] Chart + Overlay endpoints registered');
 }
