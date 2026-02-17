@@ -2501,11 +2501,13 @@ class FractalAPITester:
         
         # Calculate category success rates
         basic_success = sum(basic_tests) / len(basic_tests) * 100 if basic_tests else 0
+        phase2_success = sum(phase2_tests) / len(phase2_tests) * 100 if phase2_tests else 0
         institutional_success = sum(institutional_tests) / len(institutional_tests) * 100 if institutional_tests else 0
         core_success = sum(core_tests) / len(core_tests) * 100 if core_tests else 0
         
         print(f"\n📊 CATEGORY BREAKDOWN:")
         print(f"Basic Health: {basic_success:.1f}%")
+        print(f"PHASE 2 Terminal: {phase2_success:.1f}%")
         print(f"Institutional V2.1: {institutional_success:.1f}%")
         print(f"Core Fractal: {core_success:.1f}%")
         
