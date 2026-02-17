@@ -146,6 +146,20 @@ Created institutional docs:
 - [x] Hardened OPS routes (6 new endpoints)
 - [x] 19 vitest tests PASSED
 
+### ✅ BLOCK 59.2 — Decision Kernel (P1.1 + P1.2) (COMPLETED 2026-02-17)
+- [x] P1.1: Consensus Index (`consensus.index.ts`)
+  - Tier weights: STRUCTURE 40%, TACTICAL 35%, TIMING 25%
+  - Blocker penalties: LOW_CONFIDENCE, HIGH_ENTROPY, HIGH_TAIL_RISK
+  - consensusToMultiplier() for dynamic sizing
+  - 18 vitest tests PASSED
+- [x] P1.2: Conflict Resolver Policy (`conflict.policy.ts`)
+  - Conflict levels: NONE, MINOR, MODERATE, MAJOR, SEVERE
+  - Resolution modes: TREND_FOLLOW, COUNTER_TREND, WAIT
+  - Sizing penalties: 0%, 10%, 25%, 50%, 75%
+  - Tier summaries and divergence scoring
+  - 19 vitest tests PASSED
+- [x] API Integration: `/api/fractal/v2.1/terminal` returns `decisionKernel.consensus` + `decisionKernel.conflict`
+
 ### BLOCK D — Full Documentation Pack
 - [ ] ARCHITECTURE.md
 - [ ] SECURITY.md
