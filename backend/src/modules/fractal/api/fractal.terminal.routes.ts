@@ -27,6 +27,9 @@ import {
   consensusToMultiplier,
   type HorizonSignalInput,
   type ConsensusResult,
+  computeConflictPolicy,
+  conflictToSizingMultiplier,
+  type ConflictResult,
 } from '../strategy/resolver/index.js';
 
 // ═══════════════════════════════════════════════════════════════
