@@ -23,6 +23,10 @@ import {
   HierarchicalResolverService,
   type HierarchicalResolveInput,
   type HorizonInput,
+  computeConsensusIndex as computeFullConsensus,
+  consensusToMultiplier,
+  type HorizonSignalInput,
+  type ConsensusResult,
 } from '../strategy/resolver/index.js';
 
 // ═══════════════════════════════════════════════════════════════
