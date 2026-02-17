@@ -4,3 +4,9 @@
 
 export { ChartRoot } from "./chart/ChartRoot";
 export { FractalTerminal } from "./FractalTerminal";
+
+// PHASE 2 — Multi-Layer Regime System
+export { HorizonSelector } from "./HorizonSelector";
+export { GlobalStructureBar } from "./GlobalStructureBar";
+export { HorizonMatrix } from "./HorizonMatrix";
+export { useFractalTerminal } from "./hooks/useFractalTerminal";
