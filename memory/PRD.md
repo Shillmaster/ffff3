@@ -161,6 +161,7 @@ Created institutional docs:
 ✅ Contract FROZEN (v2.1.0)
 ✅ Forward equity accumulating
 ✅ BLOCK B: Module Isolation COMPLETE
+✅ BLOCK E: Telegram + Cron Hardening COMPLETE
 ```
 
 ## BLOCK B Files Created
@@ -176,6 +177,31 @@ Created institutional docs:
 
 /backend/scripts/
 └── check-fractal-isolation.ts  # Linting script (npx tsx)
+```
+
+## BLOCK E Files Created
+
+```
+/modules/fractal/ops/
+├── telegram.hardened.ts       # Rate limit + retry + deduplication
+├── cron.hardening.ts          # Lock + idempotency + timeout
+├── telegram.alerts.extended.ts # 8 new alert templates
+├── ops.hardened.routes.ts     # 6 new admin endpoints
+└── __tests__/
+    ├── telegram.hardened.test.ts  # 8 tests
+    └── cron.hardening.test.ts     # 11 tests
+```
+
+## BLOCK E API Endpoints
+
+```
+GET  /admin/telegram/health       # TG service health
+GET  /admin/telegram/stats        # Sending statistics
+POST /admin/telegram/test-hardened # Test hardened sender
+GET  /admin/cron/status           # Cron locks & stats
+GET  /admin/cron/history          # Execution history
+POST /admin/jobs/daily-run-hardened # Hardened daily job
+POST /admin/notify/startup        # Startup notification
 ```
 
 **Status:** READY FOR LIVE
