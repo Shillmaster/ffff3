@@ -157,6 +157,7 @@ export async function registerFractalModule(fastify: FastifyInstance, deps?: Par
   console.log('[Fractal] BLOCK 56.6: Daily Job Scheduler registered');
   console.log('[Fractal] BLOCK 57: Shadow Divergence registered');
   console.log('[Fractal] OPS: Telegram + Cron routes registered');
+  console.log('[Fractal] BLOCK E: Hardened OPS (rate limit, retry, idempotency) registered');
   console.log('[Fractal] FREEZE: Contract v2.1.0 frozen, guards active');
   console.log('[Fractal] Chart + Overlay endpoints registered');
 }
