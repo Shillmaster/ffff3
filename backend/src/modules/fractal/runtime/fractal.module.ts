@@ -27,6 +27,7 @@ import { outcomeResolverRoutes } from '../lifecycle/outcome.resolver.routes.js';
 import { fractalJobRoutes } from '../jobs/fractal.job.routes.js';
 import { shadowDivergenceRoutes } from '../admin/shadow_divergence.routes.js';
 import { registerOpsRoutes } from '../ops/ops.routes.js';
+import { registerHardenedOpsRoutes } from '../ops/ops.hardened.routes.js';
 import { registerFreezeRoutes } from '../freeze/fractal.freeze.routes.js';
 import { FractalBootstrapService } from '../bootstrap/fractal.bootstrap.service.js';
 import { guardRoutes, playbookRoutes } from '../governance/index.js';
