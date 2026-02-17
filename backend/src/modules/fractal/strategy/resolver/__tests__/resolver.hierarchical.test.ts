@@ -12,7 +12,7 @@ import {
   HierarchicalResolverService,
   type HierarchicalResolveInput,
 } from '../resolver.hierarchical.service.js';
-import type { HorizonKey } from '../../config/horizon.config.js';
+import type { HorizonKey } from '../config/horizon.config.js';
 
 describe('HierarchicalResolverService', () => {
   let resolver: HierarchicalResolverService;
