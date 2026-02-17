@@ -5,3 +5,4 @@
 export * from './resolver.types.js';
 export * from './resolver.hierarchical.service.js';
 export * from './consensus.index.js';
+export * from './conflict.policy.js';
