@@ -100,6 +100,29 @@ interface TerminalPayload {
     };
     consensusIndex: number;
   };
+  // BLOCK 59.2 — Decision Kernel (P1.1)
+  decisionKernel: {
+    consensus: {
+      score: number;           // 0..1 (agreement strength)
+      dir: 'BUY' | 'SELL' | 'HOLD';  // dominant direction
+      dispersion: number;      // 1 - score (disagreement)
+      multiplier: number;      // sizing multiplier from consensus
+      weights: {
+        buy: number;
+        sell: number;
+        hold: number;
+      };
+      votes: Array<{
+        horizon: HorizonKey;
+        tier: 'TIMING' | 'TACTICAL' | 'STRUCTURE';
+        direction: 'BUY' | 'SELL' | 'HOLD';
+        rawConfidence: number;
+        effectiveWeight: number;
+        penalties: string[];
+        contribution: number;
+      }>;
+    };
+  };
 }
 
 // ═══════════════════════════════════════════════════════════════
