@@ -2531,6 +2531,7 @@ class FractalAPITester:
             "failed_tests": self.tests_run - self.tests_passed,
             "success_rate": (self.tests_passed / self.tests_run * 100) if self.tests_run > 0 else 0,
             "basic_success": basic_success,
+            "phase2_success": phase2_success,
             "institutional_success": institutional_success,
             "core_success": core_success,
             "all_results": self.test_results
