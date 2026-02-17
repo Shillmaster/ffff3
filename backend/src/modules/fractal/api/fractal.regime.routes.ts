@@ -73,9 +73,8 @@ async function computeRegimeData(
   }
 
   try {
-    const result = await engine.analyze({
+    const result = await engine.match({
       symbol: 'BTCUSD',
-      candles,
       windowLen: config.windowLen,
       topK: config.topK,
     });
