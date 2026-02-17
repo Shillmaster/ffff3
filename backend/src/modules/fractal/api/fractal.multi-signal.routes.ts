@@ -119,9 +119,8 @@ async function computeHorizonSignal(
 
   try {
     // Run fractal matching with horizon config
-    const result = await engine.analyze({
+    const result = await engine.match({
       symbol: 'BTCUSD',
-      candles,
       windowLen: config.windowLen,
       topK: config.topK,
     });
