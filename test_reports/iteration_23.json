@@ -5,7 +5,7 @@
     "critical_bugs": [],
     "flaky_endpoints": [
       {
-        "endpoint": "External URL (https://mongo-admin-dev.preview.emergentagent.com)",
+        "endpoint": "External URL (https://multi-layer-decision.preview.emergentagent.com)",
         "issue": "Intermittent Cloudflare 520 errors - backend connectivity issues",
         "failure_rate": "60%",
         "symptoms": "Some requests succeed, others return Cloudflare 520 Web server error",

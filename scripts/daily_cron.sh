@@ -2,7 +2,7 @@
 # Fractal Daily Cron Job - Production
 # Schedule: 10 0 * * * (UTC 00:10)
 
-BACKEND_URL="https://7e2ad881-d3b1-483b-af19-49efb040f67c.preview.emergentagent.com"
+BACKEND_URL="https://multi-layer-decision.preview.emergentagent.com"
 CRON_SECRET="fractal_production_cron_secret_2024"
 LOG_FILE="/var/log/fractal_cron.log"
 

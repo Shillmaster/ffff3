@@ -18,7 +18,7 @@
       {
         "component": "External Preview URL", 
         "issue": "Preview shows 'Unavailable - Agent resting after inactivity'",
-        "details": "https://btc-model-research.preview.emergentagent.com/fractal returns preview unavailable page",
+        "details": "https://multi-layer-decision.preview.emergentagent.com/fractal returns preview unavailable page",
         "impact": "Cannot test external user experience",
         "fix_priority": "LOW",
         "workaround": "Local testing confirms frontend loads properly"

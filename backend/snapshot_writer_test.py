@@ -15,7 +15,7 @@ import json
 from datetime import datetime, timedelta
 
 class SnapshotWriterTester:
-    def __init__(self, base_url="https://btc-model-research.preview.emergentagent.com"):
+    def __init__(self, base_url="https://multi-layer-decision.preview.emergentagent.com"):
         self.base_url = base_url
         self.tests_run = 0
         self.tests_passed = 0

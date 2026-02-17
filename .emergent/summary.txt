@@ -1,0 +1,130 @@
+<analysis>**original_problem_statement:**
+The user's initial request was to set up a full-stack application (frontend, backend, admin panel, MongoDB) from a provided GitHub repository: . The focus was on developing the logic for an isolated module called Fractal.
+
+The request evolved significantly into building a sophisticated, institutional-grade financial analysis tool. The user provided a detailed, multi-phase roadmap to transform the Fractal module into a Multi-Layer Regime System similar to those used by investment funds.
+
+**PRODUCT REQUIREMENTS (current phase):**
+Implement **BLOCK 59.2 (Decision Kernel)**, which involves adding a new layer of logic to the existing hierarchical resolver. This includes:
+1.  **P1.1 (Consensus Index):** Calculate a consensus score based on the agreement between signals from all time horizons (7d to 365d), weighted by tier (Structure, Tactical, Timing) and penalized by blockers (e.g., low confidence, high entropy).
+2.  **P1.2 (Conflict Resolver Policy):** Formalize the rules for handling conflicts between long-term bias (from 180d/365d horizons) and short-term timing signals (from 7d/14d/30d horizons). This should define modes like  and .
+3.  **Bias→Sizing Policy:** Implement a dynamic position sizing formula where the final size is a function of a base size (from a preset), the consensus score, conflict penalties, and other risk factors.
+4.  **API & UI Integration:** Expose this new  object through the  endpoint and display the refined decision logic (mode, final size, and explanations) in the frontend UI.
+
+**User's preferred language**: Русский (Russian). The next agent MUST respond in Russian.
+
+**what currently exists?**
+The application is a full-stack project with a React frontend and a NestJS (TypeScript) backend, proxied by a Python server. The Fractal module has been significantly built out to include:
+-   **Module Isolation (BLOCK B):** Completed, ensuring the module's dependencies are abstracted.
+-   **Telegram Alerts (BLOCK E):** A hardened system for sending admin alerts is in place.
+-   **Hierarchical Engine (BLOCK 58 & 59):** A foundational multi-horizon signal processing system is complete. It generates signals across 6 time horizons (7d, 14d, 30d, 90d, 180d, 365d) and uses a  to compute an initial , , and .
+-   **API Endpoints:** Key endpoints like , , and the unified  aggregator are functional.
+-   **Frontend Components:** Core UI components for the Multi-Layer Regime System (, , ) have been created.
+
+**Last working item**:
+-   **Last item agent was working:** The agent was about to begin the implementation of **BLOCK 59.2 (Decision Kernel)**, as per the user's detailed architectural plan. The planning phase is complete, and the user has given the final confirmation to start coding.
+-   **Status:** NOT STARTED
+-   **Agent Testing Done:** N
+-   **Which testing method agent to use?** backend testing agent. The plan includes creating specific Vitest test cases for the new , , and  logic to validate scenarios like full agreement, structural conflict, and hard block.
+-   **User Testing Done:** N
+
+**All Pending/In progress Issue list**:
+There are no pending bugs. The work is focused on new feature implementation.
+
+**In progress Task List**:
+-   **Task 1: Implement BLOCK 59.2 - Decision Kernel (Phase 2) (P0 - HIGHEST PRIORITY)**
+    -   **Where to resume:** Start by creating the backend services for the Decision Kernel, beginning with the **Consensus Index**.
+        1.  Create  to calculate the consensus score, direction, and dispersion based on weighted votes from all horizons.
+        2.  Create  to classify the conflict level between structural bias and tactical timing.
+        3.  Create  to calculate the final size multiplier based on consensus, conflict, and risk penalties.
+        4.  Integrate these new services into the main .
+        5.  Update the  endpoint to include the new  object in its response.
+        6.  Write comprehensive backend tests (Vitest) to cover all key decision scenarios.
+    -   **What will be achieved with this?** The system will move beyond simple signal generation to a sophisticated, institutional-grade decision-making engine that dynamically adjusts position sizing based on market consensus and structural conflicts.
+    -   **Status:** IN PROGRESS
+    -   **Should Test frontend/backend/both after fix?** backend
+    -   **Blocked on something:** None.
+
+**Upcoming and Future Tasks**
+-   **Upcoming Tasks:**
+    -   **P1.3: Volatility Regime Modifier:** After completing the Decision Kernel, enhance the sizing policy to automatically reduce exposure during periods of high market volatility.
+-   **Future Tasks:**
+    -   **P2.1: Admin Policy Editor:** Create a UI for administrators to configure the parameters of the decision engine (e.g., thresholds, weights, sizing caps).
+    -   **P2.2: Forward-truth by Layers:** Implement performance attribution to track the profitability of each layer of the model (Bias, Timing, Final Resolver) independently.
+    -   **BLOCK C: MetaBrain Integration Contract:** Define the  and create an adapter for integration with the MetaBrain system.
+    -   **BLOCK D: Documentation:** Create , , and .
+    -   **BLOCK F: MetaBrain Hard Integration:** Complete the full integration with the MetaBrain system.
+
+**Completed work in this session**
+-   **Repository Setup:** Cloned the project and configured the full-stack environment.
+-   **BLOCK B - Module Isolation Audit:** Implemented , a linting script, and isolation tests.
+-   **BLOCK E - Telegram/Cron Hardening:** Enhanced the alert system with rate limiting, retries, and health checks.
+-   **BLOCK 58/59/59.1 - Hierarchical Engine Foundation:**
+    -   Built the multi-horizon signal generation backend (7d to 365d).
+    -   Created the initial  for Bias/Timing/Final decisions.
+    -   Established the unified  data endpoint.
+    -   Developed foundational frontend components (, , ).
+
+**Earlier issues found/mentioned but not fixed**
+None. All identified issues during development (e.g., backend memory errors, incorrect import paths) were resolved.
+
+**Known issue recurrence from previous fork**
+N/A
+
+**Code Architecture**
+
+
+**Key Technical Concepts**
+-   **Backend:** NestJS (TypeScript)
+-   **Frontend:** React
+-   **Database:** MongoDB
+-   **Architecture:** A multi-layer, hierarchical decision engine for financial market analysis, inspired by institutional trading desks. It decomposes decisions into a **Structure Layer** (long-term bias), a **Tactical Layer** (mid-term context), and a **Timing Layer** (short-term entry).
+-   **Core Principle:** The system resolves conflicts between different time horizons to produce a single, risk-adjusted final decision with an explicit position size and explanation.
+
+**key DB schema**
+-   The application primarily relies on time-series data, likely stored as collections of daily  (Open, High, Low, Close, Volume) candle data for BTC. The  service in the backend is responsible for managing this data.
+
+**changes in tech stack**
+None.
+
+**All files of reference**
+-   : The main service orchestrating the decision logic.
+-   : The unified aggregator endpoint for the frontend.
+-    (New directory): This is where the new , , and  logic will be implemented.
+-   : The main page for the terminal UI.
+-   : The UI component that will display the output of the new Decision Kernel.
+-   : Contains the evolving product requirements and user discussions.
+
+**Areas that need refactoring**:
+None identified as critical, but the data access layer () may need further abstraction as more complex data queries are required for different engine components.
+
+**key api endpoints**
+-   : The primary, unified endpoint that provides all data needed to render the fractal terminal UI in a single call. This is the endpoint that needs to be updated with the  output.
+
+**Critical Info for New Agent**
+-   The user is highly technical and directs the architecture at a granular level. Adhere strictly to their plans for the Multi-Layer Regime System.
+-   The current task is **BLOCK 59.2**, which is purely a backend logic enhancement. The goal is to make the decision-making process smarter by implementing Consensus, Conflict, and Sizing policies.
+-   All new logic should be implemented in TypeScript within the  directory.
+-   Follow the approved implementation plan: first build the , then the , then the , and finally integrate them and write tests.
+
+**documents and test reports created in this job**
+-   
+
+**Last 10 User Messages and any pending HUMAN messages**
+The last series of messages confirms the detailed plan for implementing BLOCK 59.2 (the Decision Kernel). The user has approved the step-by-step approach to build the consensus, conflict, and sizing logic in the backend, following the principles of institutional investment funds. The final message is a Go to start this implementation. There are no pending questions for the user.
+
+**Project Health Check:**
+-   **Broken:** None.
+-   **Mocked:** The signal generation might return  or computation errors in the development environment if historical data is insufficient. This is an expected state and not a bug.
+
+**3rd Party Integrations**
+-   **Telegram:** Used for admin alerts via the .
+
+**Testing status**
+-   **Test files created:** Backend tests exist for the resolver service. New test files will be needed for the new , , and  modules.
+-   **Known regressions:** None.
+
+**Credentials to test flow:**
+N/A
+
+**What agent forgot to execute**
+The agent has been closely following the user's evolving and detailed instructions. Earlier tasks like BLOCK C, D, and F were implicitly de-prioritized by the user in favor of building out the core hierarchical engine. Nothing has been forgotten.</analysis>
