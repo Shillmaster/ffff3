@@ -144,6 +144,12 @@ export async function registerFractalModule(fastify: FastifyInstance, deps?: Par
   // Register Freeze routes (Contract Freeze Pack v1.0.0)
   await fastify.register(registerFreezeRoutes);
 
+  // BLOCK 58/59 — Multi-Signal Extended (all horizons + hierarchical resolver)
+  await fastify.register(fractalMultiSignalRoutes);
+
+  // BLOCK 59.1 — Global Regime Panel
+  await fastify.register(fractalRegimeRoutes);
+
   // Run bootstrap in background (non-blocking)
   const bootstrap = new FractalBootstrapService();
   bootstrap.ensureBootstrapped().catch(err => {
@@ -160,6 +166,9 @@ export async function registerFractalModule(fastify: FastifyInstance, deps?: Par
   console.log('[Fractal] BLOCK 57: Shadow Divergence registered');
   console.log('[Fractal] OPS: Telegram + Cron routes registered');
   console.log('[Fractal] BLOCK E: Hardened OPS (rate limit, retry, idempotency) registered');
+  console.log('[Fractal] BLOCK 58: Hierarchical Resolver (Bias + Timing + Final) registered');
+  console.log('[Fractal] BLOCK 59: Extended Horizons (90d/180d/365d) registered');
+  console.log('[Fractal] BLOCK 59.1: Global Regime Panel registered');
   console.log('[Fractal] FREEZE: Contract v2.1.0 frozen, guards active');
   console.log('[Fractal] Chart + Overlay endpoints registered');
 }
