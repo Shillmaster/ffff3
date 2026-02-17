@@ -127,6 +127,13 @@ Created institutional docs:
 - [ ] Fallback logic
 - [ ] Integration tests
 
+### ✅ BLOCK E — Telegram Admin Alerts + Cron Hardening (COMPLETED 2026-02-17)
+- [x] TelegramHardenedService (rate limit, retry, deduplication)
+- [x] CronHardeningService (lock, idempotency, timeout protection)
+- [x] Extended alert templates (8 new message types)
+- [x] Hardened OPS routes (6 new endpoints)
+- [x] 19 vitest tests PASSED
+
 ### BLOCK D — Full Documentation Pack
 - [ ] ARCHITECTURE.md
 - [ ] SECURITY.md
