@@ -188,12 +188,18 @@ describe('HierarchicalResolverService', () => {
   describe('Risk adjustments', () => {
     it('should apply entropy penalty to size', () => {
       const inputLowEntropy = createInput({
-        '30d': { dir: 'LONG', expectedReturn: 0.10, confidence: 0.5 },
-        '365d': { dir: 'LONG', expectedReturn: 0.25, confidence: 0.6 },
+        '30d': { dir: 'LONG', expectedReturn: 0.15, confidence: 0.6, reliability: 0.8 },
+        '365d': { dir: 'LONG', expectedReturn: 0.30, confidence: 0.7, reliability: 0.85 },
       });
       inputLowEntropy.globalEntropy = 0.2;
+      inputLowEntropy.mcP95_DD = 0.25;
 
-      const inputHighEntropy = { ...inputLowEntropy, globalEntropy: 0.9 };
+      const inputHighEntropy = createInput({
+        '30d': { dir: 'LONG', expectedReturn: 0.15, confidence: 0.6, reliability: 0.8 },
+        '365d': { dir: 'LONG', expectedReturn: 0.30, confidence: 0.7, reliability: 0.85 },
+      });
+      inputHighEntropy.globalEntropy = 0.9;
+      inputHighEntropy.mcP95_DD = 0.25;
 
       const resultLow = resolver.resolve(inputLowEntropy);
       const resultHigh = resolver.resolve(inputHighEntropy);
@@ -204,12 +210,18 @@ describe('HierarchicalResolverService', () => {
 
     it('should apply tail risk penalty', () => {
       const inputLowTail = createInput({
-        '30d': { dir: 'LONG', expectedReturn: 0.10, confidence: 0.5 },
-        '365d': { dir: 'LONG', expectedReturn: 0.25, confidence: 0.6 },
+        '30d': { dir: 'LONG', expectedReturn: 0.15, confidence: 0.6, reliability: 0.8 },
+        '365d': { dir: 'LONG', expectedReturn: 0.30, confidence: 0.7, reliability: 0.85 },
       });
-      inputLowTail.mcP95_DD = 0.25;
+      inputLowTail.mcP95_DD = 0.2;
+      inputLowTail.globalEntropy = 0.3;
 
-      const inputHighTail = { ...inputLowTail, mcP95_DD: 0.7 };
+      const inputHighTail = createInput({
+        '30d': { dir: 'LONG', expectedReturn: 0.15, confidence: 0.6, reliability: 0.8 },
+        '365d': { dir: 'LONG', expectedReturn: 0.30, confidence: 0.7, reliability: 0.85 },
+      });
+      inputHighTail.mcP95_DD = 0.8;
+      inputHighTail.globalEntropy = 0.3;
 
       const resultLow = resolver.resolve(inputLowTail);
       const resultHigh = resolver.resolve(inputHighTail);
