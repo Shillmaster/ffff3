@@ -17,3 +17,6 @@ export * from './storage/index.js';
 
 // BLOCK 47.x-48.x — Governance (Guard + Playbooks)
 export * from './governance/index.js';
+
+// BLOCK B — Module Isolation
+export * from './isolation/index.js';
