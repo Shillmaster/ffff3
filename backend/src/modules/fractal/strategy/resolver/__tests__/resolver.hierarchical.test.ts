@@ -221,15 +221,16 @@ describe('HierarchicalResolverService', () => {
 
   describe('Bias calculation', () => {
     it('should weight 365d higher than 180d', () => {
-      // 365d bearish, 180d bullish
+      // 365d bearish, 180d bullish - higher confidence to exceed threshold
       const input = createInput({
-        '180d': { dir: 'LONG', expectedReturn: 0.15, confidence: 0.6 },
-        '365d': { dir: 'SHORT', expectedReturn: -0.20, confidence: 0.6 },
+        '180d': { dir: 'LONG', expectedReturn: 0.25, confidence: 0.8, reliability: 0.9 },
+        '365d': { dir: 'SHORT', expectedReturn: -0.35, confidence: 0.85, reliability: 0.9 },
       });
+      input.globalEntropy = 0.2; // Low entropy
 
       const result = resolver.resolve(input);
 
-      // 365d should dominate
+      // 365d should dominate (weight 0.65 vs 0.35)
       expect(result.bias.dir).toBe('BEAR');
       expect(result.bias.dominantHorizon).toBe('365d');
     });
