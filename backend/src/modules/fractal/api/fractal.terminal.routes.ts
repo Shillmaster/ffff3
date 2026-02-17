@@ -390,7 +390,10 @@ export async function fractalTerminalRoutes(fastify: FastifyInstance): Promise<v
         topK: focusConfig.topK,
       }).catch(() => null);
 
-      const consensusIndex = computeConsensusIndex(horizonMatrix);
+      // BLOCK 59.2 — P1.1: Full Consensus Index calculation
+      const consensusResult = buildConsensusFromMatrix(horizonMatrix);
+      const consensusMultiplier = consensusToMultiplier(consensusResult.score);
+      const consensusIndex = computeSimpleConsensusIndex(horizonMatrix); // backward compat
 
       const payload: TerminalPayload = {
         meta: {
@@ -446,6 +449,29 @@ export async function fractalTerminalRoutes(fastify: FastifyInstance): Promise<v
             longTermDir: longBias,
           },
           consensusIndex,
+        },
+        // BLOCK 59.2 — Decision Kernel (P1.1)
+        decisionKernel: {
+          consensus: {
+            score: consensusResult.score,
+            dir: consensusResult.dir,
+            dispersion: consensusResult.dispersion,
+            multiplier: consensusMultiplier,
+            weights: {
+              buy: consensusResult.buyWeight,
+              sell: consensusResult.sellWeight,
+              hold: consensusResult.holdWeight,
+            },
+            votes: consensusResult.votes.map(v => ({
+              horizon: v.horizon,
+              tier: v.tier,
+              direction: v.direction,
+              rawConfidence: v.rawConfidence,
+              effectiveWeight: v.effectiveWeight,
+              penalties: v.penalties,
+              contribution: v.contribution,
+            })),
+          },
         },
       };
 
