@@ -153,6 +153,22 @@ Created institutional docs:
 ✅ Telegram alerts ACTIVE
 ✅ Contract FROZEN (v2.1.0)
 ✅ Forward equity accumulating
+✅ BLOCK B: Module Isolation COMPLETE
+```
+
+## BLOCK B Files Created
+
+```
+/modules/fractal/isolation/
+├── fractal.host.deps.ts      # FractalHostDeps interface + defaults
+├── fail.containment.ts       # Safe HOLD wrapper on errors
+├── forbidden.imports.ts      # Import rules registry
+├── index.ts                  # Public exports
+└── __tests__/
+    └── isolation.test.ts     # 15 vitest tests
+
+/backend/scripts/
+└── check-fractal-isolation.ts  # Linting script (npx tsx)
 ```
 
 **Status:** READY FOR LIVE
