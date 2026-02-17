@@ -418,6 +418,14 @@ export async function fractalTerminalRoutes(fastify: FastifyInstance): Promise<v
       const consensusMultiplier = consensusToMultiplier(consensusResult.score);
       const consensusIndex = computeSimpleConsensusIndex(horizonMatrix); // backward compat
 
+      // BLOCK 59.2 — P1.2: Compute Conflict Policy
+      const conflictResult = computeConflictPolicy({
+        consensus: consensusResult,
+        globalEntropy: sig30?.entropy || 0.5,
+        mcP95_DD: sig30?.tailRisk || 0.5,
+      });
+      const conflictSizingMultiplier = conflictToSizingMultiplier(conflictResult.level);
+
       const payload: TerminalPayload = {
         meta: {
           symbol,
@@ -473,7 +481,7 @@ export async function fractalTerminalRoutes(fastify: FastifyInstance): Promise<v
           },
           consensusIndex,
         },
-        // BLOCK 59.2 — Decision Kernel (P1.1)
+        // BLOCK 59.2 — Decision Kernel (P1.1 + P1.2)
         decisionKernel: {
           consensus: {
             score: consensusResult.score,
@@ -494,6 +502,26 @@ export async function fractalTerminalRoutes(fastify: FastifyInstance): Promise<v
               penalties: v.penalties,
               contribution: v.contribution,
             })),
+          },
+          // P1.2: Conflict Policy
+          conflict: {
+            level: conflictResult.level,
+            mode: conflictResult.mode,
+            sizingPenalty: conflictResult.sizingPenalty,
+            sizingMultiplier: conflictSizingMultiplier,
+            structureVsTiming: {
+              aligned: conflictResult.structureVsTiming.aligned,
+              structureDir: conflictResult.structureVsTiming.structureDir,
+              timingDir: conflictResult.structureVsTiming.timingDir,
+              divergenceScore: conflictResult.structureVsTiming.divergenceScore,
+            },
+            tiers: {
+              structure: { dir: conflictResult.structure.dominantDir, strength: conflictResult.structure.strength },
+              tactical: { dir: conflictResult.tactical.dominantDir, strength: conflictResult.tactical.strength },
+              timing: { dir: conflictResult.timing.dominantDir, strength: conflictResult.timing.strength },
+            },
+            explain: conflictResult.explain,
+            recommendation: conflictResult.recommendation,
           },
         },
       };
