@@ -254,7 +254,8 @@ class BlockEAPITester:
             "Notify Startup",
             "POST",
             "/api/fractal/v2.1/admin/notify/startup",
-            200
+            200,
+            data={}  # Empty object instead of None
         )
         
         if success:
