@@ -1907,6 +1907,447 @@ class FractalAPITester:
         self.log_test("Institutional Phase Risk (CAPITULATION=0.5, horizonPolicy)", success, details)
         return success
 
+    # ═══════════════════════════════════════════════════════════════
+    # PHASE 2 P0.1-P0.4: TERMINAL AGGREGATOR TESTS
+    # ═══════════════════════════════════════════════════════════════
+
+    def test_fractal_v21_terminal_basic(self):
+        """Test GET /api/fractal/v2.1/terminal?symbol=BTC&set=extended&focus=30d - basic terminal payload"""
+        params = {"symbol": "BTC", "set": "extended", "focus": "30d"}
+        success, details = self.make_request("GET", "/api/fractal/v2.1/terminal", params=params, timeout=90)
+        
+        if success:
+            data = details.get("response_data", {})
+            
+            # Check top-level structure
+            required_sections = ["meta", "chart", "overlay", "horizonMatrix", "structure", "resolver"]
+            missing_sections = [section for section in required_sections if section not in data]
+            
+            if missing_sections:
+                success = False
+                details["error"] = f"Missing terminal payload sections: {missing_sections}"
+            else:
+                # Validate meta section
+                meta = data.get("meta", {})
+                required_meta_fields = ["symbol", "asof", "horizonSet", "focus", "contractVersion"]
+                missing_meta = [field for field in required_meta_fields if field not in meta]
+                
+                if missing_meta:
+                    success = False
+                    details["error"] = f"Missing meta fields: {missing_meta}"
+                elif meta.get("symbol") != "BTC":
+                    success = False
+                    details["error"] = f"Expected symbol 'BTC', got '{meta.get('symbol')}'"
+                elif meta.get("horizonSet") != "extended":
+                    success = False
+                    details["error"] = f"Expected horizonSet 'extended', got '{meta.get('horizonSet')}'"
+                elif meta.get("focus") != "30d":
+                    success = False
+                    details["error"] = f"Expected focus '30d', got '{meta.get('focus')}'"
+                elif meta.get("contractVersion") != "v2.1.0":
+                    success = False
+                    details["error"] = f"Expected contractVersion 'v2.1.0', got '{meta.get('contractVersion')}'"
+                else:
+                    details["payload_sections"] = {
+                        "meta": "✅ Valid",
+                        "chart": "present" if "chart" in data else "missing",
+                        "overlay": "present" if "overlay" in data else "missing", 
+                        "horizonMatrix": "present" if "horizonMatrix" in data else "missing",
+                        "structure": "present" if "structure" in data else "missing",
+                        "resolver": "present" if "resolver" in data else "missing"
+                    }
+        
+        self.log_test("Fractal v2.1 Terminal - Basic Payload (PHASE 2 P0.1)", success, details)
+        return success
+
+    def test_fractal_v21_terminal_chart(self):
+        """Test terminal chart section structure"""
+        params = {"symbol": "BTC", "set": "extended", "focus": "30d"}
+        success, details = self.make_request("GET", "/api/fractal/v2.1/terminal", params=params, timeout=90)
+        
+        if success:
+            data = details.get("response_data", {})
+            chart = data.get("chart", {})
+            
+            # Validate chart structure
+            required_chart_fields = ["candles", "sma200", "currentPrice", "priceChange24h", "globalPhase"]
+            missing_chart = [field for field in required_chart_fields if field not in chart]
+            
+            if missing_chart:
+                success = False
+                details["error"] = f"Missing chart fields: {missing_chart}"
+            else:
+                candles = chart.get("candles", [])
+                if not isinstance(candles, list):
+                    success = False
+                    details["error"] = "Expected candles to be an array"
+                elif len(candles) == 0:
+                    success = False
+                    details["error"] = "Expected non-empty candles array"
+                elif len(candles) > 365:
+                    success = False
+                    details["error"] = f"Expected max 365 candles for chart, got {len(candles)}"
+                else:
+                    # Check candle structure
+                    first_candle = candles[0]
+                    required_candle_fields = ["ts", "o", "h", "l", "c", "v"]
+                    missing_candle_fields = [field for field in required_candle_fields if field not in first_candle]
+                    
+                    if missing_candle_fields:
+                        success = False
+                        details["error"] = f"Missing candle fields: {missing_candle_fields}"
+                    else:
+                        details["chart_data"] = {
+                            "candles_count": len(candles),
+                            "current_price": chart.get("currentPrice"),
+                            "sma200": chart.get("sma200"),
+                            "price_change_24h": chart.get("priceChange24h"),
+                            "global_phase": chart.get("globalPhase")
+                        }
+        
+        self.log_test("Fractal v2.1 Terminal - Chart Section (PHASE 2 P0.1)", success, details)
+        return success
+
+    def test_fractal_v21_terminal_horizon_matrix(self):
+        """Test terminal horizonMatrix section - should contain all 6 horizons for extended set"""
+        params = {"symbol": "BTC", "set": "extended", "focus": "30d"}
+        success, details = self.make_request("GET", "/api/fractal/v2.1/terminal", params=params, timeout=90)
+        
+        if success:
+            data = details.get("response_data", {})
+            horizon_matrix = data.get("horizonMatrix", [])
+            
+            # Check for all 6 extended horizons
+            expected_horizons = ["7d", "14d", "30d", "90d", "180d", "365d"]
+            
+            if not isinstance(horizon_matrix, list):
+                success = False
+                details["error"] = "Expected horizonMatrix to be an array"
+            elif len(horizon_matrix) != 6:
+                success = False
+                details["error"] = f"Expected 6 horizons for extended set, got {len(horizon_matrix)}"
+            else:
+                # Check horizons present
+                horizons_found = [h.get("horizon") for h in horizon_matrix]
+                missing_horizons = [h for h in expected_horizons if h not in horizons_found]
+                
+                if missing_horizons:
+                    success = False
+                    details["error"] = f"Missing horizons: {missing_horizons}"
+                else:
+                    # Validate horizon structure
+                    first_horizon = horizon_matrix[0]
+                    required_horizon_fields = ["horizon", "tier", "direction", "expectedReturn", 
+                                             "confidence", "reliability", "entropy", "tailRisk", 
+                                             "stability", "blockers", "weight"]
+                    missing_horizon_fields = [field for field in required_horizon_fields if field not in first_horizon]
+                    
+                    if missing_horizon_fields:
+                        success = False
+                        details["error"] = f"Missing horizon fields: {missing_horizon_fields}"
+                    else:
+                        # Count tiers
+                        tier_counts = {}
+                        for h in horizon_matrix:
+                            tier = h.get("tier", "UNKNOWN")
+                            tier_counts[tier] = tier_counts.get(tier, 0) + 1
+                        
+                        details["horizon_matrix"] = {
+                            "horizons_found": sorted(horizons_found),
+                            "tier_distribution": tier_counts,
+                            "sample_direction": first_horizon.get("direction"),
+                            "sample_confidence": first_horizon.get("confidence"),
+                            "total_weight": sum(h.get("weight", 0) for h in horizon_matrix)
+                        }
+                        
+                        # Check for proper tier distribution
+                        if "TIMING" not in tier_counts or "TACTICAL" not in tier_counts or "STRUCTURE" not in tier_counts:
+                            success = False
+                            details["error"] = f"Expected all three tiers (TIMING/TACTICAL/STRUCTURE), got: {list(tier_counts.keys())}"
+        
+        self.log_test("Fractal v2.1 Terminal - HorizonMatrix (6 horizons) (PHASE 2 P0.2)", success, details)
+        return success
+
+    def test_fractal_v21_terminal_structure(self):
+        """Test terminal structure section - should contain globalBias + biasStrength + explain"""
+        params = {"symbol": "BTC", "set": "extended", "focus": "30d"}
+        success, details = self.make_request("GET", "/api/fractal/v2.1/terminal", params=params, timeout=90)
+        
+        if success:
+            data = details.get("response_data", {})
+            structure = data.get("structure", {})
+            
+            # Check required structure fields
+            required_structure_fields = ["globalBias", "biasStrength", "phase", "dominantHorizon", "explain"]
+            missing_structure = [field for field in required_structure_fields if field not in structure]
+            
+            if missing_structure:
+                success = False
+                details["error"] = f"Missing structure fields: {missing_structure}"
+            else:
+                global_bias = structure.get("globalBias")
+                bias_strength = structure.get("biasStrength")
+                explain = structure.get("explain")
+                
+                # Validate globalBias values
+                valid_bias_values = ["BULL", "BEAR", "NEUTRAL"]
+                if global_bias not in valid_bias_values:
+                    success = False
+                    details["error"] = f"Invalid globalBias '{global_bias}', expected one of: {valid_bias_values}"
+                # Validate biasStrength is numeric
+                elif not isinstance(bias_strength, (int, float)):
+                    success = False
+                    details["error"] = f"Expected numeric biasStrength, got {type(bias_strength)}"
+                elif bias_strength < 0 or bias_strength > 1:
+                    success = False
+                    details["error"] = f"Expected biasStrength 0-1, got {bias_strength}"
+                # Validate explain is array
+                elif not isinstance(explain, list):
+                    success = False
+                    details["error"] = f"Expected explain to be array, got {type(explain)}"
+                elif len(explain) == 0:
+                    success = False
+                    details["error"] = "Expected non-empty explain array"
+                else:
+                    details["structure_data"] = {
+                        "global_bias": global_bias,
+                        "bias_strength": bias_strength,
+                        "phase": structure.get("phase"),
+                        "dominant_horizon": structure.get("dominantHorizon"),
+                        "explain_count": len(explain),
+                        "explain_sample": explain[0] if explain else "N/A"
+                    }
+        
+        self.log_test("Fractal v2.1 Terminal - Structure (globalBias + biasStrength + explain) (PHASE 2 P0.3)", success, details)
+        return success
+
+    def test_fractal_v21_terminal_resolver(self):
+        """Test terminal resolver section - should contain timing + final + conflict + consensusIndex"""
+        params = {"symbol": "BTC", "set": "extended", "focus": "30d"}
+        success, details = self.make_request("GET", "/api/fractal/v2.1/terminal", params=params, timeout=90)
+        
+        if success:
+            data = details.get("response_data", {})
+            resolver = data.get("resolver", {})
+            
+            # Check top-level resolver structure
+            required_resolver_sections = ["timing", "final", "conflict", "consensusIndex"]
+            missing_resolver = [section for section in required_resolver_sections if section not in resolver]
+            
+            if missing_resolver:
+                success = False
+                details["error"] = f"Missing resolver sections: {missing_resolver}"
+            else:
+                # Validate timing section
+                timing = resolver.get("timing", {})
+                required_timing_fields = ["action", "score", "strength", "dominantHorizon"]
+                missing_timing = [field for field in required_timing_fields if field not in timing]
+                
+                if missing_timing:
+                    success = False
+                    details["error"] = f"Missing timing fields: {missing_timing}"
+                else:
+                    # Validate final section
+                    final = resolver.get("final", {})
+                    required_final_fields = ["action", "mode", "sizeMultiplier", "reason", "blockers"]
+                    missing_final = [field for field in required_final_fields if field not in final]
+                    
+                    if missing_final:
+                        success = False
+                        details["error"] = f"Missing final fields: {missing_final}"
+                    else:
+                        # Validate conflict section
+                        conflict = resolver.get("conflict", {})
+                        required_conflict_fields = ["hasConflict", "shortTermDir", "longTermDir"]
+                        missing_conflict = [field for field in required_conflict_fields if field not in conflict]
+                        
+                        if missing_conflict:
+                            success = False
+                            details["error"] = f"Missing conflict fields: {missing_conflict}"
+                        else:
+                            # Validate consensusIndex is numeric
+                            consensus_index = resolver.get("consensusIndex")
+                            if not isinstance(consensus_index, (int, float)):
+                                success = False
+                                details["error"] = f"Expected numeric consensusIndex, got {type(consensus_index)}"
+                            elif consensus_index < 0 or consensus_index > 1:
+                                success = False
+                                details["error"] = f"Expected consensusIndex 0-1, got {consensus_index}"
+                            else:
+                                details["resolver_data"] = {
+                                    "timing_action": timing.get("action"),
+                                    "final_action": final.get("action"),
+                                    "final_mode": final.get("mode"),
+                                    "size_multiplier": final.get("sizeMultiplier"),
+                                    "has_conflict": conflict.get("hasConflict"),
+                                    "consensus_index": consensus_index,
+                                    "blockers_count": len(final.get("blockers", []))
+                                }
+        
+        self.log_test("Fractal v2.1 Terminal - Resolver (timing + final + conflict + consensusIndex) (PHASE 2 P0.4)", success, details)
+        return success
+
+    def test_fractal_v21_terminal_overlay(self):
+        """Test terminal overlay section for focus horizon"""
+        params = {"symbol": "BTC", "set": "extended", "focus": "30d"}
+        success, details = self.make_request("GET", "/api/fractal/v2.1/terminal", params=params, timeout=90)
+        
+        if success:
+            data = details.get("response_data", {})
+            overlay = data.get("overlay", {})
+            
+            # Validate overlay structure
+            required_overlay_fields = ["focus", "windowLen", "aftermathDays", "currentWindow", "matches"]
+            missing_overlay = [field for field in required_overlay_fields if field not in overlay]
+            
+            if missing_overlay:
+                success = False
+                details["error"] = f"Missing overlay fields: {missing_overlay}"
+            else:
+                focus = overlay.get("focus")
+                matches = overlay.get("matches", [])
+                current_window = overlay.get("currentWindow", [])
+                
+                # Validate focus matches parameter
+                if focus != "30d":
+                    success = False
+                    details["error"] = f"Expected overlay focus '30d', got '{focus}'"
+                # Validate matches structure
+                elif not isinstance(matches, list):
+                    success = False
+                    details["error"] = f"Expected matches to be array, got {type(matches)}"
+                # Validate currentWindow is array
+                elif not isinstance(current_window, list):
+                    success = False
+                    details["error"] = f"Expected currentWindow to be array, got {type(current_window)}"
+                else:
+                    # Check match structure if matches exist
+                    match_validation = True
+                    if len(matches) > 0:
+                        first_match = matches[0]
+                        required_match_fields = ["id", "similarity", "phase"]
+                        missing_match_fields = [field for field in required_match_fields if field not in first_match]
+                        if missing_match_fields:
+                            success = False
+                            details["error"] = f"Missing match fields: {missing_match_fields}"
+                            match_validation = False
+                    
+                    if match_validation:
+                        details["overlay_data"] = {
+                            "focus": focus,
+                            "window_len": overlay.get("windowLen"),
+                            "aftermath_days": overlay.get("aftermathDays"),
+                            "matches_count": len(matches),
+                            "current_window_len": len(current_window),
+                            "sample_match": matches[0] if matches else "No matches"
+                        }
+        
+        self.log_test("Fractal v2.1 Terminal - Overlay (focus horizon) (PHASE 2 P0.1)", success, details)
+        return success
+
+    def test_fractal_v21_terminal_short_set(self):
+        """Test terminal with short horizon set (7d/14d/30d)"""
+        params = {"symbol": "BTC", "set": "short", "focus": "14d"}
+        success, details = self.make_request("GET", "/api/fractal/v2.1/terminal", params=params, timeout=90)
+        
+        if success:
+            data = details.get("response_data", {})
+            horizon_matrix = data.get("horizonMatrix", [])
+            
+            # Check for 3 short horizons
+            expected_short_horizons = ["7d", "14d", "30d"]
+            
+            if not isinstance(horizon_matrix, list):
+                success = False
+                details["error"] = "Expected horizonMatrix to be an array"
+            elif len(horizon_matrix) != 3:
+                success = False
+                details["error"] = f"Expected 3 horizons for short set, got {len(horizon_matrix)}"
+            else:
+                horizons_found = sorted([h.get("horizon") for h in horizon_matrix])
+                if horizons_found != expected_short_horizons:
+                    success = False
+                    details["error"] = f"Expected short horizons {expected_short_horizons}, got {horizons_found}"
+                else:
+                    # Check meta reflects short set
+                    meta = data.get("meta", {})
+                    if meta.get("horizonSet") != "short":
+                        success = False
+                        details["error"] = f"Expected meta.horizonSet 'short', got '{meta.get('horizonSet')}'"
+                    elif meta.get("focus") != "14d":
+                        success = False
+                        details["error"] = f"Expected meta.focus '14d', got '{meta.get('focus')}'"
+                    else:
+                        details["short_set_data"] = {
+                            "horizons": horizons_found,
+                            "horizon_count": len(horizon_matrix),
+                            "focus": meta.get("focus"),
+                            "horizon_set": meta.get("horizonSet")
+                        }
+        
+        self.log_test("Fractal v2.1 Terminal - Short Set (3 horizons) (PHASE 2 P0.2)", success, details)
+        return success
+
+    def test_fractal_v21_terminal_error_handling(self):
+        """Test terminal endpoint error handling"""
+        # Test unsupported symbol
+        params = {"symbol": "ETH", "set": "extended", "focus": "30d"}
+        success, details = self.make_request("GET", "/api/fractal/v2.1/terminal", params=params, timeout=30)
+        
+        # Should fail with BTC_ONLY error
+        if success:
+            success = False
+            details["error"] = "Expected request to fail for non-BTC symbol"
+        elif details.get("status_code") == 400:
+            data = details.get("response_data", {})
+            if data.get("error") == "BTC_ONLY":
+                success = True
+                details["note"] = "✅ Correctly rejected non-BTC symbol with BTC_ONLY error"
+            else:
+                success = False
+                details["error"] = f"Expected BTC_ONLY error, got {data.get('error')}"
+        else:
+            success = False
+            details["error"] = f"Expected 400 status for invalid symbol, got {details.get('status_code')}"
+        
+        self.log_test("Fractal v2.1 Terminal - Error Handling (BTC_ONLY) (PHASE 2 P0.1)", success, details)
+        return success
+
+    def test_fractal_v21_terminal_different_focus(self):
+        """Test terminal with different focus horizons"""
+        test_focuses = ["7d", "90d", "365d"]
+        
+        for focus in test_focuses:
+            params = {"symbol": "BTC", "set": "extended", "focus": focus}
+            success, details = self.make_request("GET", "/api/fractal/v2.1/terminal", params=params, timeout=90)
+            
+            if success:
+                data = details.get("response_data", {})
+                meta = data.get("meta", {})
+                overlay = data.get("overlay", {})
+                
+                # Check focus is correctly set
+                if meta.get("focus") != focus:
+                    success = False
+                    details["error"] = f"Expected meta.focus '{focus}', got '{meta.get('focus')}'"
+                elif overlay.get("focus") != focus:
+                    success = False
+                    details["error"] = f"Expected overlay.focus '{focus}', got '{overlay.get('focus')}'"
+                else:
+                    details[f"focus_{focus}_data"] = {
+                        "meta_focus": meta.get("focus"),
+                        "overlay_focus": overlay.get("focus"),
+                        "overlay_window_len": overlay.get("windowLen")
+                    }
+            
+            test_name = f"Fractal v2.1 Terminal - Focus {focus} (PHASE 2 P0.1)"
+            self.log_test(test_name, success, details)
+            
+            if not success:
+                return False
+        
+        return True
+
     def test_fractal_v21_institutional_signal(self):
         """Test GET /api/fractal/v2.1/institutional/signal - full institutional signal with budget, exposure, phase, score"""
         params = {
