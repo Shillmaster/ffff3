@@ -2444,6 +2444,24 @@ class FractalAPITester:
         ]
         
         # ═══════════════════════════════════════════════════════════════
+        # PHASE 2 P0.1-P0.4: TERMINAL AGGREGATOR TESTS
+        # ═══════════════════════════════════════════════════════════════
+        print("\n🚀 PHASE 2 P0.1-P0.4: TERMINAL AGGREGATOR SYSTEM")
+        print("-" * 70)
+        
+        phase2_tests = [
+            self.test_fractal_v21_terminal_basic(),
+            self.test_fractal_v21_terminal_chart(),
+            self.test_fractal_v21_terminal_horizon_matrix(),
+            self.test_fractal_v21_terminal_structure(),
+            self.test_fractal_v21_terminal_resolver(),
+            self.test_fractal_v21_terminal_overlay(),
+            self.test_fractal_v21_terminal_short_set(),
+            self.test_fractal_v21_terminal_error_handling(),
+            self.test_fractal_v21_terminal_different_focus(),
+        ]
+
+        # ═══════════════════════════════════════════════════════════════
         # FRACTAL V2.1 INSTITUTIONAL MULTI-HORIZON ENDPOINTS (BLOCKS 39.1-39.5)
         # ═══════════════════════════════════════════════════════════════
         print("\n🏢 FRACTAL V2.1 INSTITUTIONAL MULTI-HORIZON (BLOCKS 39.1-39.5)")
