@@ -118,10 +118,16 @@ async function computeHorizonSignal(
   }
 
   try {
+    // Map horizon config windowLen to supported FractalEngine sizes
+    const supportedWindowSizes = [30, 60, 90];
+    const mappedWindowLen = supportedWindowSizes.reduce((prev, curr) => 
+      Math.abs(curr - config.windowLen) < Math.abs(prev - config.windowLen) ? curr : prev
+    );
+
     // Run fractal matching with horizon config
     const result = await engine.match({
       symbol: 'BTCUSD',
-      windowLen: config.windowLen,
+      windowLen: mappedWindowLen,
       topK: config.topK,
     });
 
