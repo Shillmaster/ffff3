@@ -136,6 +136,9 @@ export async function registerFractalModule(fastify: FastifyInstance, deps?: Par
   // Register OPS routes (Telegram + Cron - Production Infrastructure)
   await fastify.register(registerOpsRoutes);
 
+  // Register Hardened OPS routes (BLOCK E - Telegram + Cron Hardening)
+  await fastify.register(registerHardenedOpsRoutes);
+
   // Register Freeze routes (Contract Freeze Pack v1.0.0)
   await fastify.register(registerFreezeRoutes);
 
