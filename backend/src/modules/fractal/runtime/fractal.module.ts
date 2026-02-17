@@ -151,6 +151,9 @@ export async function registerFractalModule(fastify: FastifyInstance, deps?: Par
   // BLOCK 59.1 — Global Regime Panel
   await fastify.register(fractalRegimeRoutes);
 
+  // PHASE 2 P0.1 — Terminal Aggregator (one request → entire terminal)
+  await fastify.register(fractalTerminalRoutes);
+
   // Run bootstrap in background (non-blocking)
   const bootstrap = new FractalBootstrapService();
   bootstrap.ensureBootstrapped().catch(err => {
