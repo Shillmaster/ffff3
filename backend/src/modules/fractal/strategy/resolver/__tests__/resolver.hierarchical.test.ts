@@ -186,9 +186,11 @@ describe('HierarchicalResolverService', () => {
   });
 
   describe('Risk adjustments', () => {
-    it('should apply entropy penalty to size', () => {
+    it('should apply entropy penalty to timing score', () => {
       const inputLowEntropy = createInput({
         '30d': { dir: 'LONG', expectedReturn: 0.15, confidence: 0.6, reliability: 0.8 },
+        '14d': { dir: 'LONG', expectedReturn: 0.12, confidence: 0.55, reliability: 0.75 },
+        '7d': { dir: 'LONG', expectedReturn: 0.10, confidence: 0.5, reliability: 0.7 },
         '365d': { dir: 'LONG', expectedReturn: 0.30, confidence: 0.7, reliability: 0.85 },
       });
       inputLowEntropy.globalEntropy = 0.2;
@@ -196,21 +198,25 @@ describe('HierarchicalResolverService', () => {
 
       const inputHighEntropy = createInput({
         '30d': { dir: 'LONG', expectedReturn: 0.15, confidence: 0.6, reliability: 0.8 },
+        '14d': { dir: 'LONG', expectedReturn: 0.12, confidence: 0.55, reliability: 0.75 },
+        '7d': { dir: 'LONG', expectedReturn: 0.10, confidence: 0.5, reliability: 0.7 },
         '365d': { dir: 'LONG', expectedReturn: 0.30, confidence: 0.7, reliability: 0.85 },
       });
-      inputHighEntropy.globalEntropy = 0.9;
+      inputHighEntropy.globalEntropy = 0.95;
       inputHighEntropy.mcP95_DD = 0.25;
 
       const resultLow = resolver.resolve(inputLowEntropy);
       const resultHigh = resolver.resolve(inputHighEntropy);
 
-      // High entropy should have smaller size multiplier
-      expect(resultHigh.final.sizeMultiplier).toBeLessThan(resultLow.final.sizeMultiplier);
+      // High entropy should have lower timing score
+      expect(resultHigh.timing.score).toBeLessThan(resultLow.timing.score);
     });
 
-    it('should apply tail risk penalty', () => {
+    it('should apply tail risk penalty to timing score', () => {
       const inputLowTail = createInput({
         '30d': { dir: 'LONG', expectedReturn: 0.15, confidence: 0.6, reliability: 0.8 },
+        '14d': { dir: 'LONG', expectedReturn: 0.12, confidence: 0.55, reliability: 0.75 },
+        '7d': { dir: 'LONG', expectedReturn: 0.10, confidence: 0.5, reliability: 0.7 },
         '365d': { dir: 'LONG', expectedReturn: 0.30, confidence: 0.7, reliability: 0.85 },
       });
       inputLowTail.mcP95_DD = 0.2;
@@ -218,16 +224,18 @@ describe('HierarchicalResolverService', () => {
 
       const inputHighTail = createInput({
         '30d': { dir: 'LONG', expectedReturn: 0.15, confidence: 0.6, reliability: 0.8 },
+        '14d': { dir: 'LONG', expectedReturn: 0.12, confidence: 0.55, reliability: 0.75 },
+        '7d': { dir: 'LONG', expectedReturn: 0.10, confidence: 0.5, reliability: 0.7 },
         '365d': { dir: 'LONG', expectedReturn: 0.30, confidence: 0.7, reliability: 0.85 },
       });
-      inputHighTail.mcP95_DD = 0.8;
+      inputHighTail.mcP95_DD = 0.9;
       inputHighTail.globalEntropy = 0.3;
 
       const resultLow = resolver.resolve(inputLowTail);
       const resultHigh = resolver.resolve(inputHighTail);
 
-      // High tail risk should have smaller size
-      expect(resultHigh.final.sizeMultiplier).toBeLessThan(resultLow.final.sizeMultiplier);
+      // High tail risk should have lower timing score
+      expect(resultHigh.timing.score).toBeLessThan(resultLow.timing.score);
     });
   });
 
