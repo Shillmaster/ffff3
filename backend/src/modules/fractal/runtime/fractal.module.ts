@@ -34,6 +34,7 @@ import { guardRoutes, playbookRoutes } from '../governance/index.js';
 import { adminOverviewRoutes } from '../admin/dashboard/index.js';
 import { fractalMultiSignalRoutes } from '../api/fractal.multi-signal.routes.js';
 import { fractalRegimeRoutes } from '../api/fractal.regime.routes.js';
+import { fractalTerminalRoutes } from '../api/fractal.terminal.routes.js';
 
 // ═══════════════════════════════════════════════════════════════
 // BLOCK 42.1 — Host Dependencies Contract
